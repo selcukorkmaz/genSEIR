@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1613050221953.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "ACBBC43B",
+    "lastKnownWriteTime" : 1613469756,
+    "last_content_update" : 1613469756857,
+    "path" : "~/Documents/GitHub/genSEIR/genSEIR/R/getLambdaFun.R",
+    "project_path" : "R/getLambdaFun.R",
+    "properties" : {
+        "cursorPosition" : "0,44",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 14,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1613049897742.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "753EDF20",
+    "lastKnownWriteTime" : 1613819720,
+    "last_content_update" : 1613819720610,
+    "path" : "~/Documents/GitHub/genSEIR/genSEIR/R/checkRates.R",
+    "project_path" : "R/checkRates.R",
+    "properties" : {
+        "cursorPosition" : "4,82",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

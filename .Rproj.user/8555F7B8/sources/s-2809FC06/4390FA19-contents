@@ -1,0 +1,87 @@
+  rm(list = ls())
+  library(genSEIR)
+
+  start = "09/01/20" ## mm/dd/yy # start date
+  finish = "03/15/21" ## mm/dd/yy # finish date
+  dt=1 # oversample time to ensure that the algorithm converges
+  f=40 # future predictions (number of days)
+
+  name = "Germany"# country name
+
+  # get COVID-19 data from John-Hopkins University
+  data = getDataCOVID(start = start, finish = finish, country = name)
+  Recovered = data$tableRecovered
+  Deaths = data$tableDeaths
+  Confirmed = data$tableConfirmed
+
+  if(nrow(Recovered) == 1){
+
+    name = Recovered$CountryRegion
+  }else{
+
+    name = paste0(Recovered$ProvinceState, " (",Recovered$CountryRegion,")")
+
+  }
+
+  for(i  in 1:nrow(Recovered)){
+
+
+    recovered = Recovered[i,5:ncol(data$tableRecovered)]
+    deaths = Deaths[i,5:ncol(data$tableDeaths)]
+    confirmed = Confirmed[i,5:ncol(data$tableConfirmed)]
+
+  ## define population
+  Npop = 66000000
+
+  # Definition of the first estimates for the parameters
+  alpha_guess = 0.08 # % protection rate
+  beta_guess = 1# % Infection rate
+  LT_guess = 5# % latent time in days
+  Q_guess = 0.1# % rate at which infectious people enter in quarantine
+  lambda_guess = c(0.01,0.001,10)# % recovery rate
+  kappa_guess = c(0.001,0.001,10)# % death rate
+  guess = c(alpha_guess,
+            beta_guess,
+            1/LT_guess,
+            Q_guess,
+            lambda_guess,
+            kappa_guess)
+
+  # Initial conditions
+  Q0 = confirmed[1]-recovered[1]-deaths[1]#
+  I0 = 0.3*Q0# % Initial number of infectious cases. Unknown but unlikely to be zero.
+  E0 = 0.3*Q0# % Initial number of exposed cases. Unknown but unlikely to be zero.
+  R0 = recovered[1]#
+  D0 = deaths[1]#
+
+
+  Active = confirmed-recovered-deaths
+  Active[Active<0] <- 0 # No negative number possible
+
+  Q=Active
+  R=recovered
+  D = deaths
+
+  time = seq(as.Date(start, format = "%m/%d/%y"), as.Date(finish, format = "%m/%d/%y"), by = "1 day")
+
+  ## parameter estimations
+  params = fit_SEIQRDP(Q = Active, R = recovered, D = deaths,Npop = Npop, E0 = E0,I0 = I0,
+                       time = time, guess = guess, ftol = 1e-6,
+                       ptol = 1e-6, gtol = 1e-6, epsfcn = 0.001, factor = 100, maxfev = 1000,
+                       maxiter = 100, nprint = 1, trace = T)
+
+  ## SEIR results
+  res = SEIQRDP(alpha=params$alpha1, beta=params$beta1,
+                gamma=params$gamma1, delta=params$delta1,
+                lambda0=params$Lambda1, kappa0 = params$Kappa1,
+                Npop,E0,I0,Q0,R0,D0,lambdaFun=params$lambdaFun,
+                kappaFun=params$kappaFun,tstart = start, tfinish = finish,
+                dt = dt, f=f)
+
+  ## SEIR plot
+  p = plotSEIQRDP(res, Active, recovered, deaths, name[i], params, checkRates = T)
+  print(p)
+
+
+
+  }

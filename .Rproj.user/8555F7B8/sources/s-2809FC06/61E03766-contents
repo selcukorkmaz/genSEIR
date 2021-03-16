@@ -1,0 +1,78 @@
+rm(list = ls())
+
+start = "05/01/20" ## ay/gün/yıl
+finish = "10/01/20"
+dt=1
+library(genSEIR)
+
+
+data = genSEIR:::getDataCOVID(start = start, finish = finish, country = c("Brazil"))
+Recovered = data$tableRecovered[,5:ncol(data$tableRecovered)]
+Deaths = data$tableDeaths[,5:ncol(data$tableDeaths)]
+Confirmed = data$tableConfirmed[,5:ncol(data$tableConfirmed)]
+
+Npop = 300000000
+
+# Definition of the first estimates for the parameters
+alpha_guess = 0.06 # % protection rate
+beta_guess = 1# % Infection rate
+LT_guess = 5# % latent time in days
+Q_guess = 0.1# % rate at which infectious people enter in quarantine
+lambda_guess = c(0.1,0.001,10)# % recovery rate
+kappa_guess = c(0.001,0.001,10)# % death rate
+guess = c(alpha_guess,
+          beta_guess,
+          1/LT_guess,
+          Q_guess,
+          lambda_guess,
+          kappa_guess)
+# Initial conditions
+Q0 = Confirmed[1]-Recovered[1]-Deaths[1]#
+I0 = 0.3*Q0# % Initial number of infectious cases. Unknown but unlikely to be zero.
+E0 = 0.3*Q0# % Initial number of exposed cases. Unknown but unlikely to be zero.
+R0 = Recovered[1]#
+D0 = Deaths[1]#
+
+# fit_SEIQRDP(Q,R,D,Npop,E0,I0,time,guess, ...)
+
+Active = Confirmed-Recovered-Deaths
+Active[Active<0] <- 0 # No negative number possible
+
+Q=Active
+R=Recovered
+D = Deaths
+
+time = seq(as.Date(start, format = "%m/%d/%y"), as.Date(finish, format = "%m/%d/%y"), by = "1 day")
+
+
+params = genSEIR:::fit_SEIQRDP(Q = Active, R = Recovered, D = Deaths,Npop = Npop, E0 = E0,I0 = I0,
+                     time = time, guess = guess, ftol = 1e-6,
+                     ptol = 1e-6, gtol = 1e-6, epsfcn = 0.001, factor = 100, maxfev = 1000,
+                     maxiter = 100, nprint = 1, trace = T)
+
+
+# params = list(alpha1=alpha1,beta1=beta1,gamma1=gamma1,delta1=delta1,Lambda1=Lambda1,Kappa1=Kappa1,lambdaFun=lambdaFun,kappaFun=kappaFun)
+time1 = seq(as.Date(time[1]),as.Date("2020-12-31")+10,dt)
+N = length(time1);
+t = (1:N-1)*dt;
+
+res = SEIQRDP(alpha=params$alpha1, beta=params$beta1,
+              gamma=params$gamma1, delta=params$delta1,
+              lambda0=params$Lambda1, kappa0 = params$Kappa1,
+              Npop,E0,I0,Q0,R0,D0,t,lambdaFun=params$lambdaFun,
+              kappaFun=params$kappaFun)
+
+plot(as.Date(time1), res$recovered, type = "l", col="blue")
+lines(as.Date(time), Recovered, type = "p", col="blue")
+
+
+
+lines(as.Date(time1), res$quarantined, type = "l", col="red")
+lines(as.Date(time), Active, type = "p", col="red")
+
+
+lines(as.Date(time1), res$dead, type = "l", col="black")
+lines(as.Date(time), Deaths, type = "p", col="black")
+
+checkRates(as.Date(time),Q,R,D,params$kappaFun,params$lambdaFun,params$Kappa1,params$Lambda1)
+params

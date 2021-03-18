@@ -5,14 +5,14 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "2193831600",
+    "hash" : "0",
     "id" : "31B018A0",
-    "lastKnownWriteTime" : 1616060677,
-    "last_content_update" : 1616060677263,
+    "lastKnownWriteTime" : 1616060763,
+    "last_content_update" : 1616060763506,
     "path" : "~/Documents/GitHub/genSEIR/genSEIR/R/SEIQRDP.R",
     "project_path" : "R/SEIQRDP.R",
     "properties" : {
-        "cursorPosition" : "85,9",
+        "cursorPosition" : "85,1",
         "scrollLine" : "69"
     },
     "relative_order" : 6,

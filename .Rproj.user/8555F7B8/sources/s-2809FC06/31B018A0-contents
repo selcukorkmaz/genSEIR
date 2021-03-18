@@ -83,7 +83,6 @@ for(ii in 1:(N-1)){
   return(list(susceptible = S,exposed = E, infectious = I,quarantined = Q,
               recovered = R, dead = D, insusceptible = P, realTime = realTime, simTime = simTime, dt = dt))
 
-  list=NA
 }
 
 

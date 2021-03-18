@@ -6,7 +6,7 @@
   dt=1 # oversample time to ensure that the algorithm converges
   f=40 # future predictions (number of days)
 
-  name = "Germany"# country name
+  name = "Turkey"# country name
 
   # get COVID-19 data from John-Hopkins University
   data = getDataCOVID(start = start, finish = finish, country = name)

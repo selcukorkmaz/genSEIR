@@ -25,5 +25,5 @@ Runge-Kutta of order 4
 \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
 }
 \author{
-Selçuk Korkmaz, \email{selcukorkmaz@gmail.com}
+Selçuk KORKMAZ, \email{selcukorkmaz@gmail.com}
 }

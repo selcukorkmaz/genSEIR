@@ -25,6 +25,9 @@ checkRates(time, Q, R, D, kappaFun, lambdaFun, kappa, lambda, dt = 1)
 
 \item{dt}{Time step, default is 1}
 }
+\value{
+Creates plots for death rate and recovery rate. The idea is to check whether the approximation of these ratios is appropriate.
+}
 \description{
 This function compares the fitted and calcualted death and recovered ratios.
 The idea is to check whether the approximation of these ratios is appropriate

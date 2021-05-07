@@ -10,7 +10,8 @@ getDataCOVID <- function(start = NULL, finish = NULL, country = NULL){
   #' @param country rate of people entering in quarantine
   #'
   #' @export getDataCOVID
-
+  #'
+  #'
   #' @author Selçuk Korkmaz, \email{selcukorkmaz@gmail.com}
   #'
   #' @seealso \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}

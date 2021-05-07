@@ -16,12 +16,15 @@ checkRates <- function(time,Q,R,D,kappaFun,lambdaFun,kappa,lambda, dt=1){
     #' @param dt Time step, default is 1
     #'
     #' @export checkRates
-
+    #'
+    #' @return Creates plots for death rate and recovery rate. The idea is to check whether the approximation of these ratios is appropriate.
+    #'
     #' @author Selçuk Korkmaz, \email{selcukorkmaz@gmail.com}
     #'
     #' @seealso \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
     #'
     #' @references \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
+    #'
 
 
     Q = as.numeric(Q)

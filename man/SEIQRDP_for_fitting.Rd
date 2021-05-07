@@ -11,7 +11,7 @@ SEIQRDP_for_fitting(par, t, t0)
 
 \item{t}{fitted  infection rate}
 
-\item{t0}{fitted  Inverse of the average latent time}
+\item{t0}{fitted  inverse of the average latent time}
 }
 \description{
 Nested Function

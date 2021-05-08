@@ -58,5 +58,5 @@ convergence of the main algorithm.
 \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
 }
 \author{
-Selçuk Korkmaz, \email{selcukorkmaz@gmail.com}
+Selcuk KORKMAZ, \email{selcukorkmaz@gmail.com}
 }

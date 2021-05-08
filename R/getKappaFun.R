@@ -25,7 +25,7 @@ getKappaFun <- function(tTarget, Q, D, guess, ftol,
   #'
   #' @importFrom nlsr nlxb
 
-  #' @author Selçuk Korkmaz, \email{selcukorkmaz@gmail.com}
+  #' @author Selcuk KORKMAZ, \email{selcukorkmaz@gmail.com}
   #'
   #' @seealso \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
   #'

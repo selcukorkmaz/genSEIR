@@ -5,9 +5,9 @@ getDataCOVID <- function(start = NULL, finish = NULL, country = NULL){
   #' The function collects the updated  COVID-19 data from the
   #' John Hopkins University
 
-  #' @param start protection rate
-  #' @param finish inverse of the average latent time
-  #' @param country rate of people entering in quarantine
+  #' @param start enter a start date in mm/dd/yy format. Start date can not be earlier than 01/22/20. Start date can not be later than finish date. If start date is null then start date will be 01/22/20.
+  #' @param finish enter a finish date in mm/dd/yy format. Finish date can not be earlier than start date. If finish date is null then finish date will be the latest date at John-Hopkins CSSE system.
+  #' @param country name of the desired country.
   #'
   #' @export getDataCOVID
   #'
@@ -31,15 +31,15 @@ getDataCOVID <- function(start = NULL, finish = NULL, country = NULL){
   }else{finish = finalDate}
 
   if(start > finish){
-    stop(paste0("Start date is ", start, " and finish date is ", finish, ". Start date cannot be greater than finish date."))
+    stop(paste0("Start date is ", as.Date(start, format = "%m/%d/%y"), " and finish date is ", as.Date(finish, format = "%m/%d/%y"), ". Start date cannot be later than finish date."))
   }
 
   if(start < initialDate){
-    stop(paste0("Start date is ", start, ". Start date cannot be less than ", initialDate))
+    stop(paste0("Start date is ", start, ". Start date cannot be earlier than ", initialDate))
   }
 
   if(finish > finalDate){
-    stop(paste0("Finish date is ", finish, ". Finish date cannot be greater than ", finalDate))
+    stop(paste0("Finish date is ", finish, ". Finish date cannot be later than ", finalDate))
   }
 
 

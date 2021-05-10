@@ -7,11 +7,11 @@
 getDataCOVID(start = NULL, finish = NULL, country = NULL)
 }
 \arguments{
-\item{start}{protection rate}
+\item{start}{enter a start date in mm/dd/yy format. Start date can not be earlier than 01/22/20. Start date can not be later than finish date. If start date is null then start date will be 01/22/20.}
 
-\item{finish}{inverse of the average latent time}
+\item{finish}{enter a finish date in mm/dd/yy format. Finish date can not be earlier than start date. If finish date is null then finish date will be the latest date at John-Hopkins CSSE system.}
 
-\item{country}{rate of people entering in quarantine}
+\item{country}{name of the desired country.}
 }
 \description{
 The function collects the updated  COVID-19 data from the

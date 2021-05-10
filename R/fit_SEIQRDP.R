@@ -7,12 +7,12 @@ fit_SEIQRDP <- function(Q, R, D, Npop, E0, I0, time, guess, ftol = 1e-6,
   #'Fit SEIQRDP function parameters used in the SEIQRDP function, used to model
   #' the time-evolution of an epidemic outbreak.
 
-  #' @param Q time histories of the quarantined/active cases
+  #' @param Q time histories of the active cases
   #' @param R time histories of the recovered cases
   #' @param D time histories of the deceased cases
-  #' @param Npop total population of the sample
+  #' @param Npop total population of the country
   #' @param E0 initial number of exposed cases
-  #' @param I0 initial number of infectious cases
+  #' @param I0 initial number of predicted infectious cases
   #' @param time time vector
   #' @param guess initiail guess parameters
   #' @param ftol nls.lm.control object. non-negative numeric. Default is \code{1e-6}

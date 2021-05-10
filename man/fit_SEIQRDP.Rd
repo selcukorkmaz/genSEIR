@@ -26,17 +26,17 @@ fit_SEIQRDP(
 )
 }
 \arguments{
-\item{Q}{time histories of the quarantined/active cases}
+\item{Q}{time histories of the active cases}
 
 \item{R}{time histories of the recovered cases}
 
 \item{D}{time histories of the deceased cases}
 
-\item{Npop}{total population of the sample}
+\item{Npop}{total population of the country}
 
 \item{E0}{initial number of exposed cases}
 
-\item{I0}{initial number of infectious cases}
+\item{I0}{initial number of predicted infectious cases}
 
 \item{time}{time vector}
 

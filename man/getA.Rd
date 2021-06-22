@@ -17,15 +17,20 @@ getA(alpha, gamma, delta, lambda, kappa)
 
 \item{kappa}{mortality rate}
 }
+\value{
+The matrix A that is found in: dY/dt = A*Y + F
+}
 \description{
 This function computes the matrix A that is found in: dY/dt = A*Y + F
 }
 \references{
+Peng, L., Yang, W., Zhang, D., Zhuge, C., Hong, L. 2020. “Epidemic analysis of COVID-19 in China by dynamical modeling”, arXiv preprint arXiv:2002.06563.
+
 \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
 }
 \seealso{
 \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
 }
 \author{
-Selçuk Korkmaz, \email{selcukorkmaz@gmail.com}
+Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
 }

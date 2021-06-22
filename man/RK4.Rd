@@ -2,21 +2,24 @@
 % Please edit documentation in R/RK4.R
 \name{RK4}
 \alias{RK4}
-\title{Runge-Kutta of order 4}
+\title{Runge-Kutta 4th Order Method to Solve Differential Equation}
 \usage{
 RK4(Y, A, K, dt)
 }
 \arguments{
 \item{Y}{time vector}
 
-\item{A}{target time-histories of the quarantined cases}
+\item{A}{the matrix A that is found in: dY/dt = A*Y + F}
 
-\item{K}{target time-histories of the recovered cases}
+\item{K}{the zero matrix for the seven states}
 
-\item{dt}{Initiail guess parameters for kappa}
+\item{dt}{the time step. This oversamples time to ensure that the algorithm converges}
+}
+\value{
+ordinary differential equation result as a vector
 }
 \description{
-Runge-Kutta of order 4
+Runge-Kutta 4th Order Method to Solve Differential Equation
 }
 \references{
 \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
@@ -25,5 +28,5 @@ Runge-Kutta of order 4
 \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
 }
 \author{
-Selçuk KORKMAZ, \email{selcukorkmaz@gmail.com}
+Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
 }

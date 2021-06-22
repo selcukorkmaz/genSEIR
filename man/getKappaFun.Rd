@@ -47,16 +47,21 @@ getKappaFun(
 
 \item{trace}{Set \code{TRUE} to trace iteration results}
 }
+\value{
+vector of estimation and optimization function for the death rate
+}
 \description{
 This function provides a first estimate of the  death rate, to faciliate
 convergence of the main algorithm.
 }
 \references{
+Peng, L., Yang, W., Zhang, D., Zhuge, C., Hong, L. 2020. “Epidemic analysis of COVID-19 in China by dynamical modeling”, arXiv preprint arXiv:2002.06563.
+
 \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
 }
 \seealso{
 \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
 }
 \author{
-Selcuk KORKMAZ, \email{selcukorkmaz@gmail.com}
+Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
 }

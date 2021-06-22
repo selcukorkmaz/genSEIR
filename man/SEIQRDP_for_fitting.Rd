@@ -2,26 +2,31 @@
 % Please edit documentation in R/SEIQRDP_for_fitting.R
 \name{SEIQRDP_for_fitting}
 \alias{SEIQRDP_for_fitting}
-\title{Nested Function}
+\title{Fitted Results for SEIQRDP}
 \usage{
 SEIQRDP_for_fitting(par, t, t0)
 }
 \arguments{
-\item{par}{fitted protection rate}
+\item{par}{initial guess parameters}
 
-\item{t}{fitted  infection rate}
+\item{t}{historical time vector}
 
-\item{t0}{fitted  inverse of the average latent time}
+\item{t0}{target time vector}
+}
+\value{
+a data frame for fitted quarantined, recovered and deaths
 }
 \description{
-Nested Function
+Fitted Results for SEIQRDP
 }
 \references{
+Peng, L., Yang, W., Zhang, D., Zhuge, C., Hong, L. 2020. “Epidemic analysis of COVID-19 in China by dynamical modeling”, arXiv preprint arXiv:2002.06563.
+
 \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
 }
 \seealso{
-\code{\link{fit_SEIQRDP}}
+\code{\link{fit_SEIQRDP}}  \code{\link{RK4}}
 }
 \author{
-Selçuk Korkmaz, \email{selcukorkmaz@gmail.com}
+Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
 }

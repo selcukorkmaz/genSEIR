@@ -1,40 +1,103 @@
-fit_SEIQRDP <- function(Q, R, D, Npop, E0, I0, time, guess, ftol = 1e-6,
+#'Fit SEIQRDP function
+#'
+#'Fit SEIQRDP function parameters used in the SEIQRDP function, used to model
+#' the time-evolution of an epidemic outbreak.
+
+#' @param Q time histories of the active cases
+#' @param R time histories of the recovered cases
+#' @param D time histories of the deceased cases
+#' @param Npop total population of the country
+#' @param E0 initial number of exposed cases
+#' @param I0 initial number of predicted infectious cases
+#' @param time a time vector
+#' @param dt the time step. This oversamples time to ensure that the algorithm converges
+#' @param guess initial guess parameters
+#' @param ftol nls.lm.control object. non-negative numeric. Default is \code{1e-6}
+#' @param ptol nls.lm.control object. non-negative numeric. Default is \code{1e-6}
+#' @param gtol nls.lm.control object. non-negative numeric. Default is \code{1e-6}
+#' @param epsfcn nls.lm.control object. Default is \code{0.001}
+#' @param factor nls.lm.control object. Default is \code{100}
+#' @param maxfev nls.lm.control object. Default is \code{1000}
+#' @param maxiter nls.lm.control object. Default is \code{100}
+#' @param nprint nls.lm.control object. Default is \code{1}
+#' @param trace set \code{TRUE} to trace iteration results
+#' @param ... further arguments
+#'
+#'@importFrom minpack.lm nls.lm nls.lm.control
+#'
+#'@export fit_SEIQRDP
+#'
+#' @author Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
+#'
+#' @return a list of optimized parameters
+#'
+#' @examples
+#'\donttest{
+#'start = "01/01/21"
+#'finish = "04/01/21"
+#'country = "Italy"
+#'dt = 1
+#'f=30
+#'
+#'covidData = getDataCOVID(start = start, finish = finish, country = country)
+#'Recovered = covidData$tableRecovered
+#'Deaths = covidData$tableDeaths
+#'Confirmed = covidData$tableConfirmed
+#'
+#'if(nrow(Recovered) == 1){
+#'   name = Recovered$CountryRegion
+#'}else{
+#'    name = paste0(Recovered$ProvinceState, " (",Recovered$CountryRegion,")")
+#'}
+#'
+#'   recovered = Recovered[ ,5:ncol(covidData$tableRecovered)]
+#'   deaths = Deaths[ ,5:ncol(covidData$tableDeaths)]
+#'   confirmed = Confirmed[ ,5:ncol(covidData$tableConfirmed)]
+#'
+#'   Npop = 60000000
+#'
+#'   alpha_guess = 0.05
+#'   beta_guess = 0.8
+#'   LT_guess = 7
+#'   Q_guess = 0.8
+#'   lambda_guess = c(0.01,0.001,10)
+#'   kappa_guess = c(0.001,0.001,10)
+#'
+#'   guess = c(alpha_guess,
+#'             beta_guess,
+#'             1/LT_guess,
+#'             Q_guess,
+#'             lambda_guess,
+#'             kappa_guess)
+#'
+#'  Q0 = confirmed[1]-recovered[1]-deaths[1]
+#'  I0 = 0.3*Q0
+#'  E0 = 0.3*Q0
+#'  R0 = recovered[1]
+#'  D0 = deaths[1]
+#'
+#'  Active = confirmed-recovered-deaths
+#'  Active[Active<0] <- 0
+#'
+#'  Q=Active
+#'  R=recovered
+#'  D = deaths
+#'
+#'  time = seq(as.Date(start, format = "%m/%d/%y"), as.Date(finish, format = "%m/%d/%y"), by = "1 day")
+#'
+#'  params = fit_SEIQRDP(Q = Active, R = recovered, D = deaths, Npop = Npop, E0 = E0, I0 = I0,
+#'                         time = time, dt = dt, guess = guess, ftol = 1e-6, ptol = 1e-6, gtol = 1e-6,
+#'                         epsfcn = 0.001, factor = 100, maxfev = 1000,maxiter = 100, nprint = 1,
+#'                         trace = TRUE)
+#'}
+#' @seealso \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
+#'
+#' @references Peng, L., Yang, W., Zhang, D., Zhuge, C., Hong, L. 2020. “Epidemic analysis of COVID-19 in China by dynamical modeling”, arXiv preprint arXiv:2002.06563.
+#' @references \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
+
+fit_SEIQRDP <- function(Q, R, D, Npop, E0, I0, time, dt = 1/24, guess, ftol = 1e-6,
                         ptol = 1e-6, gtol = 1e-6, epsfcn = 0.001, factor = 100, maxfev = 1000,
                         maxiter = 100, nprint = 1, trace = TRUE, ...){
-
-  #'Fit SEIQRDP function
-  #'
-  #'Fit SEIQRDP function parameters used in the SEIQRDP function, used to model
-  #' the time-evolution of an epidemic outbreak.
-
-  #' @param Q time histories of the active cases
-  #' @param R time histories of the recovered cases
-  #' @param D time histories of the deceased cases
-  #' @param Npop total population of the country
-  #' @param E0 initial number of exposed cases
-  #' @param I0 initial number of predicted infectious cases
-  #' @param time time vector
-  #' @param guess initiail guess parameters
-  #' @param ftol nls.lm.control object. non-negative numeric. Default is \code{1e-6}
-  #' @param ptol nls.lm.control object. non-negative numeric. Default is \code{1e-6}
-  #' @param gtol nls.lm.control object. non-negative numeric. Default is \code{1e-6}
-  #' @param epsfcn nls.lm.control object. Default is \code{0.001}
-  #' @param factor nls.lm.control object. Default is \code{100}
-  #' @param maxfev nls.lm.control object. Default is \code{1000}
-  #' @param maxiter nls.lm.control object. Default is \code{100}
-  #' @param nprint nls.lm.control object. Default is \code{1}
-  #' @param trace set \code{TRUE} to trace iteration results
-  #' @param ... further arguments
-  #'
-  #'@importFrom minpack.lm nls.lm nls.lm.control
-  #'@export fit_SEIQRDP
-
-  #' @author Selçuk Korkmaz, \email{selcukorkmaz@gmail.com}
-  #'
-  #' @seealso \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
-  #'
-  #' @references \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
-
 
   Q[Q<0] <- 0
   R[R<0] <- 0

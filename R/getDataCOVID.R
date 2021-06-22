@@ -1,22 +1,37 @@
-getDataCOVID <- function(start = NULL, finish = NULL, country = NULL){
 
-  #' Get COVID-19 Data
-  #'
-  #' The function collects the updated  COVID-19 data from the
-  #' John Hopkins University
+#' Get COVID-19 Data
+#'
+#' The function collects the updated  COVID-19 data from the
+#' John Hopkins University.
 
-  #' @param start enter a start date in mm/dd/yy format. Start date can not be earlier than 01/22/20. Start date can not be later than finish date. If start date is null then start date will be 01/22/20.
-  #' @param finish enter a finish date in mm/dd/yy format. Finish date can not be earlier than start date. If finish date is null then finish date will be the latest date at John-Hopkins CSSE system.
-  #' @param country name of the desired country.
-  #'
-  #' @export getDataCOVID
-  #'
-  #'
-  #' @author Selçuk Korkmaz, \email{selcukorkmaz@gmail.com}
-  #'
-  #' @seealso \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
-  #'
-  #' @references \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
+#' @param country name of the country. It should be a character string.
+#' @param start a start date in mm/dd/yy format. Start date can not be earlier than 01/22/20. Start date can not be later than finish date. If start date is \code{NULL} then start date will be 01/22/20.
+#' @param finish a finish date in mm/dd/yy format. Finish date can not be earlier than start date. If finish date is \code{NULL} then finish date will be the latest date at John-Hopkins CSSE system.
+#'
+#' @export getDataCOVID
+#'
+#' @importFrom utils read.csv
+#'
+#' @author Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
+#'
+#' @return a list of COVID-19 historical data including confirmed, death and recovered cases in desired time ranges.
+#'
+#'
+#' @examples
+#' covidData = getDataCOVID(country = "Italy",
+#'                          start = "05/01/20",
+#'                          finish = "12/31/20")
+#' recovered = covidData$tableRecovered
+#' deaths = covidData$tableDeaths
+#' confirmed = covidData$tableConfirmed
+#'
+#' @seealso \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
+#'
+#' @references Peng, L., Yang, W., Zhang, D., Zhuge, C., Hong, L. 2020. “Epidemic analysis of COVID-19 in China by dynamical modeling”, arXiv preprint arXiv:2002.06563.
+#' @references \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
+
+
+getDataCOVID <- function(country, start = NULL, finish = NULL){
 
   initialDate = as.Date("01/22/20", format = "%m/%d/%y")
   finalDate = as.Date(Sys.Date())-1
@@ -72,6 +87,7 @@ getDataCOVID <- function(start = NULL, finish = NULL, country = NULL){
 
   }
 
-  return(list(tableConfirmed = tableConfirmed, tableRecovered=tableRecovered, tableDeaths=tableDeaths))
+  covidData = list(tableConfirmed = tableConfirmed, tableRecovered = tableRecovered, tableDeaths = tableDeaths)
+  return(covidData)
 
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotSEIQRDP.R
 \name{plotSEIQRDP}
 \alias{plotSEIQRDP}
-\title{Plot active, recovered and deaths}
+\title{Plots for Epidemic Curves}
 \usage{
 plotSEIQRDP(
   object,
@@ -32,15 +32,88 @@ plotSEIQRDP(
 
 \item{...}{other plot options}
 }
-\description{
-This function computes the matrix A that is found in: dY/dt = A*Y + F
+\value{
+plots for epidemic curves: active cases, recovered and deaths
 }
-\references{
-\url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
+\description{
+This function creates plots for reported and predicted active, recovered and death cases.
+}
+\examples{
+\donttest{
+start = "01/01/21"
+finish = "04/01/21"
+country = "Italy"
+dt = 1
+f=30
+
+covidData = getDataCOVID(start = start, finish = finish, country = country)
+Recovered = covidData$tableRecovered
+Deaths = covidData$tableDeaths
+Confirmed = covidData$tableConfirmed
+
+if(nrow(Recovered) == 1){
+  name = Recovered$CountryRegion
+}else{
+   name = paste0(Recovered$ProvinceState, " (",Recovered$CountryRegion,")")
+}
+
+  recovered = Recovered[ ,5:ncol(covidData$tableRecovered)]
+  deaths = Deaths[ ,5:ncol(covidData$tableDeaths)]
+  confirmed = Confirmed[ ,5:ncol(covidData$tableConfirmed)]
+
+  Npop = 60000000
+
+  alpha_guess = 0.05
+  beta_guess = 0.8
+  LT_guess = 7
+  Q_guess = 0.8
+  lambda_guess = c(0.01,0.001,10)
+  kappa_guess = c(0.001,0.001,10)
+
+  guess = c(alpha_guess,
+            beta_guess,
+            1/LT_guess,
+            Q_guess,
+            lambda_guess,
+            kappa_guess)
+
+ Q0 = confirmed[1]-recovered[1]-deaths[1]
+ I0 = 0.3*Q0
+ E0 = 0.3*Q0
+ R0 = recovered[1]
+ D0 = deaths[1]
+
+ Active = confirmed-recovered-deaths
+ Active[Active<0] <- 0
+
+ Q=Active
+ R=recovered
+ D = deaths
+
+ time = seq(as.Date(start, format = "\%m/\%d/\%y"), as.Date(finish, format = "\%m/\%d/\%y"), by = "1 day")
+
+ params = fit_SEIQRDP(Q = Active, R = recovered, D = deaths, Npop = Npop, E0 = E0, I0 = I0,
+                        time = time, dt = dt, guess = guess, ftol = 1e-6, ptol = 1e-6, gtol = 1e-6,
+                        epsfcn = 0.001, factor = 100, maxfev = 1000,maxiter = 100, nprint = 1,
+                        trace = TRUE)
+
+ res = SEIQRDP(alpha = params$alpha1, beta = params$beta1,
+               gamma = params$gamma1, delta = params$delta1,
+               lambda0 = params$Lambda1, kappa0 = params$Kappa1,
+               Npop, E0, I0, Q0, R0, D0,lambdaFun = params$lambdaFun,
+               kappaFun = params$kappaFun, tstart = start, tfinish = finish,
+               dt = dt, f =f)
+
+p = plotSEIQRDP(res, Active, recovered, deaths, name, params, checkRates = TRUE)
+print(p)
+}
+
 }
 \seealso{
 \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
 }
 \author{
-Selçuk Korkmaz, \email{selcukorkmaz@gmail.com}
+Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
+
+Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
 }

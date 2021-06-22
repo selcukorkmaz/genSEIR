@@ -1,21 +1,22 @@
+#' Compute the matrix A
+#'
+#' This function computes the matrix A that is found in: dY/dt = A*Y + F
+
+#' @param alpha protection rate
+#' @param gamma inverse of the average latent time
+#' @param delta rate of people entering in quarantine
+#' @param lambda cure rate
+#' @param kappa mortality rate
+#' @author Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
+#'
+#'@return The matrix A that is found in: dY/dt = A*Y + F
+#'
+#' @seealso \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
+#'
+#' @references Peng, L., Yang, W., Zhang, D., Zhuge, C., Hong, L. 2020. “Epidemic analysis of COVID-19 in China by dynamical modeling”, arXiv preprint arXiv:2002.06563.
+#' @references \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
+
 getA <- function(alpha, gamma, delta, lambda, kappa){
-
-  #' Compute the matrix A
-  #'
-  #' This function computes the matrix A that is found in: dY/dt = A*Y + F
-
-  #' @param alpha protection rate
-  #' @param gamma inverse of the average latent time
-  #' @param delta rate of people entering in quarantine
-  #' @param lambda cure rate
-  #' @param kappa mortality rate
-
-  #' @author Selçuk Korkmaz, \email{selcukorkmaz@gmail.com}
-  #'
-  #' @seealso \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
-  #'
-  #' @references \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
-
 
   A = matrix(0,7,7)
   # S

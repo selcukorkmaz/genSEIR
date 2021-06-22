@@ -21,7 +21,7 @@ SEIQRDP(
   kappaFun,
   tstart,
   tfinish,
-  dt = 1,
+  dt = 1/24,
   f = 0
 )
 }
@@ -58,19 +58,93 @@ SEIQRDP(
 
 \item{tfinish}{finish date}
 
-\item{dt}{time step}
+\item{dt}{the time step. This oversamples time to ensure that the algorithm converges}
 
 \item{f}{future predictions}
+}
+\value{
+a list of predicted cases including susceptible, exposed,  infectious, quarantined, recovered, dead and insusceptible.
 }
 \description{
 This function simulates the time-histories of an epidemic outbreak using a generalized SEIR model
 }
+\examples{
+\donttest{
+start = "01/01/21"
+finish = "04/01/21"
+country = "Italy"
+dt = 1
+f=30
+
+covidData = getDataCOVID(start = start, finish = finish, country = country)
+Recovered = covidData$tableRecovered
+Deaths = covidData$tableDeaths
+Confirmed = covidData$tableConfirmed
+
+if(nrow(Recovered) == 1){
+  name = Recovered$CountryRegion
+}else{
+   name = paste0(Recovered$ProvinceState, " (",Recovered$CountryRegion,")")
+}
+
+  recovered = Recovered[ ,5:ncol(covidData$tableRecovered)]
+  deaths = Deaths[ ,5:ncol(covidData$tableDeaths)]
+  confirmed = Confirmed[ ,5:ncol(covidData$tableConfirmed)]
+
+  Npop = 60000000
+
+  alpha_guess = 0.05
+  beta_guess = 0.8
+  LT_guess = 7
+  Q_guess = 0.8
+  lambda_guess = c(0.01,0.001,10)
+  kappa_guess = c(0.001,0.001,10)
+
+  guess = c(alpha_guess,
+            beta_guess,
+            1/LT_guess,
+            Q_guess,
+            lambda_guess,
+            kappa_guess)
+
+ Q0 = confirmed[1]-recovered[1]-deaths[1]
+ I0 = 0.3*Q0
+ E0 = 0.3*Q0
+ R0 = recovered[1]
+ D0 = deaths[1]
+
+ Active = confirmed-recovered-deaths
+ Active[Active<0] <- 0
+
+ Q=Active
+ R=recovered
+ D = deaths
+
+ time = seq(as.Date(start, format = "\%m/\%d/\%y"), as.Date(finish, format = "\%m/\%d/\%y"), by = "1 day")
+
+ params = fit_SEIQRDP(Q = Active, R = recovered, D = deaths, Npop = Npop, E0 = E0, I0 = I0,
+                        time = time, dt = dt, guess = guess, ftol = 1e-6, ptol = 1e-6, gtol = 1e-6,
+                        epsfcn = 0.001, factor = 100, maxfev = 1000,maxiter = 100, nprint = 1,
+                        trace = TRUE)
+
+ res = SEIQRDP(alpha = params$alpha1, beta = params$beta1,
+               gamma = params$gamma1, delta = params$delta1,
+               lambda0 = params$Lambda1, kappa0 = params$Kappa1,
+               Npop, E0, I0, Q0, R0, D0,lambdaFun = params$lambdaFun,
+               kappaFun = params$kappaFun, tstart = start, tfinish = finish,
+               dt = dt, f =f)
+}
+}
 \references{
+Peng, L., Yang, W., Zhang, D., Zhuge, C., Hong, L. 2020. “Epidemic analysis of COVID-19 in China by dynamical modeling”, arXiv preprint arXiv:2002.06563.
+
 \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
 }
 \seealso{
 \code{\link{fit_SEIQRDP}}
 }
 \author{
-Selçuk Korkmaz, \email{selcukorkmaz@gmail.com}
+Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
+
+Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
 }

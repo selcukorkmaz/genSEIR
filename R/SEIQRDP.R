@@ -1,40 +1,110 @@
-SEIQRDP <- function(alpha,beta,gamma,delta,lambda0,kappa0,
-                    Npop,E0,I0,Q0,R0,D0,lambdaFun,kappaFun,
-                    tstart, tfinish, dt = 1, f=0){
+#'Simulate generalized SEIR model
+#'
+#'This function simulates the time-histories of an epidemic outbreak using a generalized SEIR model
+#'
+#' @param alpha fitted protection rate
+#' @param beta fitted  infection rate
+#' @param gamma fitted  Inverse of the average latent time
+#' @param delta fitted  rate at which people enter in quarantine
+#' @param lambda0 fitted  cure rate
+#' @param kappa0 fitted  mortality rate
+#' @param Npop Total population of the sample
+#' @param E0 Initial number of exposed cases
+#' @param I0 Initial number of infectious cases
+#' @param Q0 Initial number of quarantined cases
+#' @param R0 Initial number of recovered cases
+#' @param D0 Initial number of dead cases
+#' @param lambdaFun anonymous function giving the time-dependant recovery rate
+#' @param kappaFun anonymous function giving the time-dependant death rate
+#' @param tstart start date
+#' @param tfinish finish date
+#' @param dt the time step. This oversamples time to ensure that the algorithm converges
+#' @param f future predictions
+#'
+#' @export SEIQRDP
+#'
+#' @importFrom stats median
+#'
+#'@author Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
+#'
+#' @return a list of predicted cases including susceptible, exposed,  infectious, quarantined, recovered, dead and insusceptible.
+#'
+#' @examples
+#'\donttest{
+#'start = "01/01/21"
+#'finish = "04/01/21"
+#'country = "Italy"
+#'dt = 1
+#'f=30
+#'
+#'covidData = getDataCOVID(start = start, finish = finish, country = country)
+#' Recovered = covidData$tableRecovered
+#' Deaths = covidData$tableDeaths
+#' Confirmed = covidData$tableConfirmed
+#'
+#' if(nrow(Recovered) == 1){
+#'   name = Recovered$CountryRegion
+#' }else{
+#'    name = paste0(Recovered$ProvinceState, " (",Recovered$CountryRegion,")")
+#' }
+#'
+#'   recovered = Recovered[ ,5:ncol(covidData$tableRecovered)]
+#'   deaths = Deaths[ ,5:ncol(covidData$tableDeaths)]
+#'   confirmed = Confirmed[ ,5:ncol(covidData$tableConfirmed)]
+#'
+#'   Npop = 60000000
+#'
+#'   alpha_guess = 0.05
+#'   beta_guess = 0.8
+#'   LT_guess = 7
+#'   Q_guess = 0.8
+#'   lambda_guess = c(0.01,0.001,10)
+#'   kappa_guess = c(0.001,0.001,10)
+#'
+#'   guess = c(alpha_guess,
+#'             beta_guess,
+#'             1/LT_guess,
+#'             Q_guess,
+#'             lambda_guess,
+#'             kappa_guess)
+#'
+#'  Q0 = confirmed[1]-recovered[1]-deaths[1]
+#'  I0 = 0.3*Q0
+#'  E0 = 0.3*Q0
+#'  R0 = recovered[1]
+#'  D0 = deaths[1]
+#'
+#'  Active = confirmed-recovered-deaths
+#'  Active[Active<0] <- 0
+#'
+#'  Q=Active
+#'  R=recovered
+#'  D = deaths
+#'
+#'  time = seq(as.Date(start, format = "%m/%d/%y"), as.Date(finish, format = "%m/%d/%y"), by = "1 day")
+#'
+#'  params = fit_SEIQRDP(Q = Active, R = recovered, D = deaths, Npop = Npop, E0 = E0, I0 = I0,
+#'                         time = time, dt = dt, guess = guess, ftol = 1e-6, ptol = 1e-6, gtol = 1e-6,
+#'                         epsfcn = 0.001, factor = 100, maxfev = 1000,maxiter = 100, nprint = 1,
+#'                         trace = TRUE)
+#'
+#'  res = SEIQRDP(alpha = params$alpha1, beta = params$beta1,
+#'                gamma = params$gamma1, delta = params$delta1,
+#'                lambda0 = params$Lambda1, kappa0 = params$Kappa1,
+#'                Npop, E0, I0, Q0, R0, D0,lambdaFun = params$lambdaFun,
+#'                kappaFun = params$kappaFun, tstart = start, tfinish = finish,
+#'                dt = dt, f =f)
+#'}
+#' @author Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
+#'
+#' @seealso \code{\link{fit_SEIQRDP}}
+#'
+#' @references Peng, L., Yang, W., Zhang, D., Zhuge, C., Hong, L. 2020. “Epidemic analysis of COVID-19 in China by dynamical modeling”, arXiv preprint arXiv:2002.06563.
+#' @references \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
 
-
-  #'Simulate generalized SEIR model
-  #'
-  #'This function simulates the time-histories of an epidemic outbreak using a generalized SEIR model
-  #'
-  #' @param alpha fitted protection rate
-  #' @param beta fitted  infection rate
-  #' @param gamma fitted  Inverse of the average latent time
-  #' @param delta fitted  rate at which people enter in quarantine
-  #' @param lambda0 fitted  cure rate
-  #' @param kappa0 fitted  mortality rate
-  #' @param Npop Total population of the sample
-  #' @param E0 Initial number of exposed cases
-  #' @param I0 Initial number of infectious cases
-  #' @param Q0 Initial number of quarantined cases
-  #' @param R0 Initial number of recovered cases
-  #' @param D0 Initial number of dead cases
-  #' @param lambdaFun anonymous function giving the time-dependant recovery rate
-  #' @param kappaFun anonymous function giving the time-dependant death rate
-  #' @param tstart start date
-  #' @param tfinish finish date
-  #' @param dt time step
-  #' @param f future predictions
-  #'
-  #' @export SEIQRDP
-
-
-  #' @author Selçuk Korkmaz, \email{selcukorkmaz@gmail.com}
-  #'
-  #' @seealso \code{\link{fit_SEIQRDP}}
-  #'
-  #' @references \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
-
+SEIQRDP <- function(alpha, beta, gamma, delta, lambda0, kappa0,
+                    Npop, E0, I0, Q0, R0, D0, lambdaFun, kappaFun,
+                    tstart, tfinish, dt = 1/24, f=0){
 
 realTime = seq(as.Date(tstart, format = "%m/%d/%y"), as.Date(tfinish, format = "%m/%d/%y"), by = "1 day")
 simTime = seq(as.Date(realTime[1]),as.Date(realTime[length(realTime)])+f, dt)

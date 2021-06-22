@@ -4,25 +4,39 @@
 \alias{getDataCOVID}
 \title{Get COVID-19 Data}
 \usage{
-getDataCOVID(start = NULL, finish = NULL, country = NULL)
+getDataCOVID(country, start = NULL, finish = NULL)
 }
 \arguments{
-\item{start}{enter a start date in mm/dd/yy format. Start date can not be earlier than 01/22/20. Start date can not be later than finish date. If start date is null then start date will be 01/22/20.}
+\item{country}{name of the country. It should be a character string.}
 
-\item{finish}{enter a finish date in mm/dd/yy format. Finish date can not be earlier than start date. If finish date is null then finish date will be the latest date at John-Hopkins CSSE system.}
+\item{start}{a start date in mm/dd/yy format. Start date can not be earlier than 01/22/20. Start date can not be later than finish date. If start date is \code{NULL} then start date will be 01/22/20.}
 
-\item{country}{name of the desired country.}
+\item{finish}{a finish date in mm/dd/yy format. Finish date can not be earlier than start date. If finish date is \code{NULL} then finish date will be the latest date at John-Hopkins CSSE system.}
+}
+\value{
+a list of COVID-19 historical data including confirmed, death and recovered cases in desired time ranges.
 }
 \description{
 The function collects the updated  COVID-19 data from the
-John Hopkins University
+John Hopkins University.
+}
+\examples{
+covidData = getDataCOVID(country = "Italy",
+                         start = "05/01/20",
+                         finish = "12/31/20")
+recovered = covidData$tableRecovered
+deaths = covidData$tableDeaths
+confirmed = covidData$tableConfirmed
+
 }
 \references{
+Peng, L., Yang, W., Zhang, D., Zhuge, C., Hong, L. 2020. “Epidemic analysis of COVID-19 in China by dynamical modeling”, arXiv preprint arXiv:2002.06563.
+
 \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
 }
 \seealso{
 \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
 }
 \author{
-Selçuk Korkmaz, \email{selcukorkmaz@gmail.com}
+Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
 }

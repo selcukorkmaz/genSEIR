@@ -21,7 +21,7 @@ getLambdaFun(
 )
 }
 \arguments{
-\item{tTarget}{time vector}
+\item{tTarget}{target time vector}
 
 \item{Q}{target time-histories of the quarantined cases}
 
@@ -45,18 +45,23 @@ getLambdaFun(
 
 \item{nprint}{nls.lm.control object. Default is \code{1}}
 
-\item{trace}{Set \code{TRUE} to trace iteration results}
+\item{trace}{set \code{TRUE} to trace iteration results}
+}
+\value{
+vector of estimation and optimization function for the recovery rate
 }
 \description{
-This function provides a first estimate of the  death rate, to faciliate
+This function provides a first estimate of the  recovery rate, to faciliate
 convergence of the main algorithm.
 }
 \references{
+Peng, L., Yang, W., Zhang, D., Zhuge, C., Hong, L. 2020. “Epidemic analysis of COVID-19 in China by dynamical modeling”, arXiv preprint arXiv:2002.06563.
+
 \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
 }
 \seealso{
 \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
 }
 \author{
-Selçuk Korkmaz, \email{selcukorkmaz@gmail.com}
+Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
 }

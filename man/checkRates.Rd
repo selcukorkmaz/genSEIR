@@ -4,40 +4,42 @@
 \alias{checkRates}
 \title{Check Rates}
 \usage{
-checkRates(time, Q, R, D, kappaFun, lambdaFun, kappa, lambda, dt = 1)
+checkRates(time, Q, R, D, kappaFun, lambdaFun, kappa, lambda, dt = 1/24)
 }
 \arguments{
-\item{time}{Time vector}
+\item{time}{time vector}
 
-\item{Q}{Time histories of the quarantined/active cases}
+\item{Q}{time histories of the quarantined/active cases}
 
-\item{R}{Time histories of the recovered cases}
+\item{R}{time histories of the recovered cases}
 
-\item{D}{Time histories of the deceased cases}
+\item{D}{time histories of the deceased cases}
 
-\item{kappaFun}{Anonymous function approximating the death rate}
+\item{kappaFun}{anonymous function approximating the death rate}
 
-\item{lambdaFun}{Anonymous function approximating the recovery rate}
+\item{lambdaFun}{anonymous function approximating the recovery rate}
 
 \item{kappa}{mortality rate}
 
 \item{lambda}{cure rate}
 
-\item{dt}{Time step, default is 1}
+\item{dt}{a time step, default is 1/24. This oversample time to ensure that the algorithm converges.}
 }
 \value{
-Creates plots for death rate and recovery rate. The idea is to check whether the approximation of these ratios is appropriate.
+plots for death rate and recovery rate
 }
 \description{
 This function compares the fitted and calcualted death and recovered ratios.
-The idea is to check whether the approximation of these ratios is appropriate
+The idea is to check whether the approximation of these ratios is appropriate.
 }
 \references{
+Peng, L., Yang, W., Zhang, D., Zhuge, C., Hong, L. 2020. “Epidemic analysis of COVID-19 in China by dynamical modeling”, arXiv preprint arXiv:2002.06563.
+
 \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
 }
 \seealso{
 \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
 }
 \author{
-Selçuk Korkmaz, \email{selcukorkmaz@gmail.com}
+Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
 }

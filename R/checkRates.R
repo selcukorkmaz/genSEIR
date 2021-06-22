@@ -1,31 +1,31 @@
+#' Check Rates
+#'
+#' This function compares the fitted and calcualted death and recovered ratios.
+#' The idea is to check whether the approximation of these ratios is appropriate.
 
-checkRates <- function(time,Q,R,D,kappaFun,lambdaFun,kappa,lambda, dt=1){
-    #' Check Rates
-    #'
-    #' This function compares the fitted and calcualted death and recovered ratios.
-    #' The idea is to check whether the approximation of these ratios is appropriate
+#' @param time time vector
+#' @param Q time histories of the quarantined/active cases
+#' @param R time histories of the recovered cases
+#' @param D time histories of the deceased cases
+#' @param kappaFun anonymous function approximating the death rate
+#' @param lambdaFun anonymous function approximating the recovery rate
+#' @param kappa mortality rate
+#' @param lambda cure rate
+#' @param dt a time step, default is 1/24. This oversample time to ensure that the algorithm converges.
+#'
+#' @export checkRates
+#'
+#' @return plots for death rate and recovery rate
+#'
+#' @author Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
+#'
+#' @seealso \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
+#'
+#' @references Peng, L., Yang, W., Zhang, D., Zhuge, C., Hong, L. 2020. “Epidemic analysis of COVID-19 in China by dynamical modeling”, arXiv preprint arXiv:2002.06563.
+#' @references \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
 
-    #' @param time Time vector
-    #' @param Q Time histories of the quarantined/active cases
-    #' @param R Time histories of the recovered cases
-    #' @param D Time histories of the deceased cases
-    #' @param kappaFun Anonymous function approximating the death rate
-    #' @param lambdaFun Anonymous function approximating the recovery rate
-    #' @param kappa mortality rate
-    #' @param lambda cure rate
-    #' @param dt Time step, default is 1
-    #'
-    #' @export checkRates
-    #'
-    #' @return Creates plots for death rate and recovery rate. The idea is to check whether the approximation of these ratios is appropriate.
-    #'
-    #' @author Selçuk Korkmaz, \email{selcukorkmaz@gmail.com}
-    #'
-    #' @seealso \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
-    #'
-    #' @references \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
-    #'
-
+checkRates <- function(time, Q, R, D, kappaFun, lambdaFun, kappa,
+                       lambda, dt = 1/24){
 
     Q = as.numeric(Q)
     R = as.numeric(R)

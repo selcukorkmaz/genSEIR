@@ -1,6 +1,6 @@
 #' Check Rates
 #'
-#' This function compares the fitted and calcualted death and recovered ratios.
+#' This function compares the fitted and calculated death and recovered ratios.
 #' The idea is to check whether the approximation of these ratios is appropriate.
 
 #' @param time time vector

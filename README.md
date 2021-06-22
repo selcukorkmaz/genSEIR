@@ -5,7 +5,7 @@ This package performs generalized Susceptible-Exposed-Infected-Recovered (SEIR) 
 Installation
 ------------
     
-    devtools::install_github('selcukorkmaz/MVN')
+    devtools::install_github('selcukorkmaz/genSEIR')
 
 
 Tutorial

@@ -28,5 +28,9 @@ Runge-Kutta 4th Order Method to Solve Differential Equation
 \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
 }
 \author{
+<<<<<<< HEAD
 Selcuk Korkmaz, \email{selcukorkmaz@gmail.com}
+=======
+Selcuk KORKMAZ, \email{selcukorkmaz@gmail.com}
+>>>>>>> 5d4fe92b30c34f0b5e5a0830b1fa1062dbdd806e
 }

@@ -13,7 +13,16 @@
 #'
 #' @references \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
 
+<<<<<<< HEAD
 RK4 <- function(Y, A, K, dt){
+=======
+
+  #' @author Selcuk KORKMAZ, \email{selcukorkmaz@gmail.com}
+  #'
+  #' @seealso \code{\link{SEIQRDP}} \code{\link{fit_SEIQRDP}}
+  #'
+  #' @references \url{https://www.mathworks.com/matlabcentral/fileexchange/74545-generalized-seir-epidemic-model-fitting-and-computation}
+>>>>>>> 5d4fe92b30c34f0b5e5a0830b1fa1062dbdd806e
 
   k_1 = modelFun(Y, A, K)
   k_2 = modelFun(Y+0.5*dt*k_1, A, K)

@@ -11,4 +11,4 @@ Installation
 Tutorial
 ----------
 
-https://github.com/selcukorkmaz/genseirhelp/settings/pages
+https://github.com/selcukorkmaz/genseirhelp
